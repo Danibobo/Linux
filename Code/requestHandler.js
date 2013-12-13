@@ -1,8 +1,9 @@
+
 //create variables 
 var exec = require("child_process").exec;
 var dblite = require('dblite');
 var quiche = require('quiche');
-var db = dblite('./Temp.db');
+var db = dblite('./Temperature.db');
 function hide()
 
 //create function to display data in databse
@@ -67,4 +68,3 @@ function displayDataB(response)
 
 //send final 
 exports.displayDataB = displayDataB;
-

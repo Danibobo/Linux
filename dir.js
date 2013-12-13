@@ -1,7 +1,7 @@
 var server = require("./server");
 var router = require("./router");
-var requestHandler = require("./requestHandler");
+var handler = require("./handler");
 
 var h = {};
-h["/"] = requestHandler.printDB;
+h["/"] = handler.printDataB;
 server.start(router.route, h);

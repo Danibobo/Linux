@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script>
+    
+        function server()
+        {
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET","http://localhost:8888/", true);
+            xmlhttp.onreadystatechange=function()
+            {
+                if(xmlhttp.readyState==4 && xmlhttp.status==200)
+                {
+                    document.getElementByID("tableDiv").innerHTML = xmlhttp.responseText;
+                }
+            } 
+            xmlhttp.send();
+        }    
+    
+    
+        function displayChart()
+        {
+            var a = document.getElementById('tableDiv');
+            if(a.style.display=='block')
+            {
+                a.style.display='none';
+            }
+            else
+            {
+                server();
+                a.style.display='block';
+            }
+        }
+
+    </script>
+    <link type="text/css" rel="stylesheet" href="style.css" />
+    
+</head>
+<body>
+
+    <button onclick="displayChart()">Toggle Table</button>
+    <div id="tableDiv">a div</div>
+</body>
+</html>

@@ -1,12 +1,13 @@
 
+//create variables 
 var exec = require("child_process").exec;
 var dblite = require('dblite');
 var quiche = require('quiche');
 var db = dblite('./Temperature.db');
 function hide()
 
-
-function printDataB(response)
+//create function to display data in databse
+function displayDataB(response)
 {
     response.writeHead(200, {"Content-Type": "text/html"});
     db.on('error', function(err)
@@ -14,7 +15,7 @@ function printDataB(response)
         console.error(err.toString());
     });
 
-    //--------create table, insert into table------------------        
+    //make table for data in csv file      
     db.query('CREATE TABLE IF NOT EXISTS tempTable(time INTEGER, temp INTEGER)');
     db.query('BEGIN');
     db.query('DELETE FROM tempTable');
@@ -22,7 +23,7 @@ function printDataB(response)
     db.query('.mode csv');
     db.query('.import tempData.csv tempTable');
  
-    //--------retrieve data from table--------------------------
+   //set up table specifications
   var bar = new quiche('bar');
   bar.setWidth(900);
   bar.setHeight(400);
@@ -31,19 +32,23 @@ function printDataB(response)
   bar.setBarSpacing(7);
   bar.setLegendHidden();
 
+  //read data time and temp in from table 
   db.query('SELECT time, temp FROM tempTable', ['time', 'temp'],
         function(rows)
         {
-            response.write('<html><body><button onclick="/requestHandler.js/hide()">table</button>');
+            response.write('<html><body><button onclick="/handler.js/hide()">table</button>');
             response.write('<div id="ttable"><table border="1"><tr><th>Time</th><th>Temperature</th></tr>');
-            rows.forEach(eachRow);
+            rows.forEach(makeSet);
         }
     );
-    function eachRow(row, i, rows)
+    //create each set of data for line of table
+    function makeSet(row, i, rows)
     {
         bar.addData([row.temp], row.time, 'FF0000');
         response.write('<tr><td>' + row.time + 
                         '</td><td>' + row.temp + '</td></tr> \n');
+                        
+        //completely populate table until no more data                
         if(i+1 === rows.length)
         {
             db.close();
@@ -56,9 +61,10 @@ function printDataB(response)
     function sleep()
     {
         var ms = 1000;
-        var time = new Date().getTime();
-        while(new Date().getTime() < time + ms);
+        var timeValue = new Date().getTime();
+        while(new Date().getTime() < timeValue + ms);
     }
 }
 
-exports.printDataB = printDataB;
+//send final 
+exports.displayDataB = displayDataB;
